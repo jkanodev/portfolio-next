@@ -1,0 +1,77 @@
+[
+  {
+    "id": "self-hosted-portfolio",
+    "title": "Self Hosted Portfolio Platform",
+    "stack": ["Docker", "Linux", "Cloudflare Tunnel", "systemd", "GitHub"],
+    "one_liner": "Dockerized portfolio with Cloudflare tunnel, caching fixes, and a repeatable deployment flow.",
+    "architecture": [
+      "Portfolio runs in a Docker container bound to port 80 on the host",
+      "cloudflared runs as a systemd service or a container depending on setup",
+      "Traffic flows through Cloudflare to the origin with minimal exposed surface"
+    ],
+    "workflow_commands": [
+      "cd ~/infra-self-hosted",
+      "git pull origin main",
+      "docker build -t portfolio .",
+      "docker stop portfolio || true",
+      "docker rm portfolio || true",
+      "docker run -d -p 80:80 --name portfolio portfolio",
+      "sudo systemctl restart cloudflared",
+      "curl -I https://your-domain-here"
+    ],
+    "linked_errors": [
+      "cloudflare-cache-stale-site",
+      "cloudflared-service-running-but-site-wrong",
+      "docker-restart-no-such-container-web",
+      "curl-placeholder-host",
+      "docker-old-site-still-serving",
+      "cloudflare-purge-fixed-old-site"
+    ],
+    "prevention_checklist": [
+      "Standardize container names",
+      "Verify with curl after deploy",
+      "Understand Cloudflare caching behavior",
+      "Keep a one line restart routine for services"
+    ]
+  },
+  {
+    "id": "kubernetes-labs",
+    "title": "Kubernetes Lab and Troubleshooting",
+    "stack": ["Kubernetes", "kind", "kubectl", "Ingress", "Services", "DNS"],
+    "one_liner": "Kind fundamentals, services, ingress debugging, cleanup discipline, and roadmap progress.",
+    "linked_errors": [
+      "ingress-served-nginx-welcome-page",
+      "kubectl-run-alreadyexists-pod-test",
+      "hosts-file-needed-for-local-domain",
+      "dns-flush-needed",
+      "leftover-default-namespace-resources"
+    ],
+    "prevention_checklist": [
+      "Avoid default namespace for real work",
+      "Clean up demo resources before testing ingress",
+      "Use unique names for debug pods",
+      "Verify with kubectl get -A and curl"
+    ]
+  },
+  {
+    "id": "aws-ec2-deploy",
+    "title": "AWS EC2 Website Deployment Pipeline",
+    "stack": ["AWS EC2", "Docker", "SSH", "GitHub Actions", "Elastic IP concept"],
+    "one_liner": "Hosted a website on EC2, stabilized IP concepts, and automated deploy through SSH.",
+    "linked_errors": [
+      "github-actions-ssh-timeout-port-22",
+      "host-secret-missing-or-wrong",
+      "ssh-fingerprint-first-connection",
+      "elastic-ip-needed-for-stable-host",
+      "router-port-forwarding-mismatch",
+      "ufw-blocked-ssh"
+    ]
+  },
+  {
+    "id": "web-games",
+    "title": "Web Games",
+    "stack": ["JavaScript", "Web UI"],
+    "one_liner": "Small interactive demos that show frontend clarity and product thinking.",
+    "linked_errors": []
+  }
+]

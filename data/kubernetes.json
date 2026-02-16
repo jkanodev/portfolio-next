@@ -1,0 +1,20 @@
+{
+  "roadmap": {
+    "name": "Kubernetes Master Roadmap",
+    "completed": ["Section 0 Cluster Foundations", "Section 1 Workloads Reconciliation and Rollouts"],
+    "in_progress": {
+      "section": "Section 2 Scheduler and Multi Node",
+      "current_position": "Pod to Node placement"
+    },
+    "not_started": [
+      "Config and Secrets",
+      "Networking Deep Dive",
+      "Health",
+      "Scaling",
+      "Helm",
+      "Terraform",
+      "Advanced Release",
+      "Observability"
+    ]
+  }
+}

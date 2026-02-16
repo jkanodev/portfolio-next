@@ -1,0 +1,64 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { Moon, Sun, Menu } from "lucide-react";
+import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
+import MobileMenu from "./MobileMenu";
+
+const navItems = [
+  { label: "Home", href: "/" },
+  { label: "Projects", href: "/projects" },
+  { label: "Knowledge Base", href: "/knowledge" },
+  { label: "Errors Wiki", href: "/knowledge/errors" },
+  { label: "Commands Library", href: "/knowledge/commands" },
+  { label: "Kubernetes Notes", href: "/knowledge/kubernetes" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
+
+export default function Header() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--bg)]/80">
+      <div className="mx-auto flex max-content items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <Link href="/" className="text-lg font-semibold text-[var(--text)] hover:text-[var(--accent)]">
+          Joseph Kano
+        </Link>
+        <nav className="hidden items-center gap-6 md:flex" aria-label="Main navigation">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-sm text-[var(--text-muted)] hover:text-[var(--text)]"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="rounded-lg border border-[var(--border)] p-2 text-[var(--text-muted)] hover:text-[var(--text)]"
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            className="rounded-lg border border-[var(--border)] p-2 text-[var(--text)] md:hidden"
+            aria-label="Open menu"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} items={navItems} />
+    </header>
+  );
+}
