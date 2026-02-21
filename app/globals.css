@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Bootstrap (for Offcanvas); overrides below for theme */
+@import "bootstrap/dist/css/bootstrap.min.css";
+
 :root {
   --bg: #0b0f14;
   --bg-elevated: #101826;
@@ -35,4 +38,36 @@ body {
 
 [id] {
   scroll-margin-top: 4rem;
+}
+
+/* Bootstrap Offcanvas: match site theme, ensure backdrop never mixes with content */
+.offcanvas {
+  background-color: var(--bg) !important;
+  color: var(--text);
+  border-left: 1px solid var(--border);
+}
+.offcanvas-header {
+  border-bottom: 1px solid var(--border);
+}
+.offcanvas-header .btn-close {
+  filter: invert(1);
+}
+html.light .offcanvas-header .btn-close {
+  filter: none;
+}
+.offcanvas-body .nav-link-mobile {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+}
+.offcanvas-body .nav-link-mobile:hover {
+  background-color: var(--surface);
+  color: var(--text);
+}
+.offcanvas-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
 }
