@@ -10,10 +10,9 @@ import MobileMenu from "./MobileMenu";
 const navItems = [
   { label: "Home", href: "/" },
   { label: "Projects", href: "/projects" },
+  { label: "What I've Learned", href: "/#what-ive-learned" },
+  { label: "Proof", href: "/#proof" },
   { label: "Knowledge Base", href: "/knowledge" },
-  { label: "Errors Wiki", href: "/knowledge/errors" },
-  { label: "Commands Library", href: "/knowledge/commands" },
-  { label: "Kubernetes Notes", href: "/knowledge/kubernetes" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];

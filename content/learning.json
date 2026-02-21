@@ -1,0 +1,126 @@
+{
+  "profile": {
+    "name": "Joseph Kano",
+    "roleTargets": ["DevOps Engineer", "Cloud Engineer", "Platform Engineer"],
+    "location": "Virginia",
+    "links": {
+      "github": "https://github.com/jkanodev"
+    }
+  },
+  "highlights": [
+    "Self-host portfolio on a home server with Docker and remote deploys",
+    "Diagnosed and fixed Cloudflare edge caching serving stale site after deploy",
+    "Prefer Tailscale-based SSH deploy to avoid ISP port 22 blocks and GitHub Actions timeouts",
+    "Kubernetes lab work: foundations, workloads, now scheduler and multi-node behavior",
+    "Document every failure and fix in a searchable knowledge base"
+  ],
+  "aws": {
+    "summary": [
+      "Hands-on learning and labs on AWS Free Tier, not formal job experience.",
+      "Focused on concepts that transfer: EC2 as a host for containers, networking basics, IAM least privilege, and how the Well-Architected Framework (six pillars) applies to real systems."
+    ],
+    "handsOn": [
+      "AWS Free Tier account setup and billing awareness",
+      "AWS CLI setup and basic usage (configure, run commands)",
+      "Understanding IAM: users, roles, policies, and least privilege",
+      "Understanding EC2 as a host for Docker workloads and stable endpoints (e.g. Elastic IP)",
+      "Understanding basic networking: VPC, subnets, security groups",
+      "CloudWatch logs and metrics at a high level",
+      "S3 basics and common use cases (storage, static assets)",
+      "AWS Well-Architected Framework: six pillars and how they apply to design decisions"
+    ],
+    "wellArchitectedPillars": [
+      {
+        "name": "Operational Excellence",
+        "whatItMeans": ["Operations as code", "Small, frequent changes", "Refine operations procedures continuously", "Anticipate failure"],
+        "howIApplyIt": ["Document deploy and rollback steps", "Use version-controlled configs and scripts", "Write postmortems and prevention checklists", "Verify with curl and health checks after changes"]
+      },
+      {
+        "name": "Security",
+        "whatItMeans": ["Identity and access management", "Detect and respond", "Protect data and systems", "Least privilege"],
+        "howIApplyIt": ["Prefer Tailscale or tunnels over opening port 22", "Use IAM principles in labs; understand roles vs users", "Secrets in GitHub Secrets, not in code", "Firewall and security group awareness (e.g. UFW)"]
+      },
+      {
+        "name": "Reliability",
+        "whatItMeans": ["Recover from failure", "Automate recovery", "Scale horizontally where it matters", "Validate change before and after"],
+        "howIApplyIt": ["Stable endpoints (Elastic IP, tunnel) so automation does not break", "Standard container replace flow: build, stop, rm, run", "Verify with curl and service status after deploy", "Clean up leftover resources in Kubernetes to avoid routing conflicts"]
+      },
+      {
+        "name": "Performance Efficiency",
+        "whatItMeans": ["Right-size resources", "Monitor and tune", "Use managed services where they reduce load", "Review and remove waste"],
+        "howIApplyIt": ["Use cache headers and purge strategy (e.g. Cloudflare) instead of over-provisioning", "Basic CloudWatch and log inspection", "Understand when edge caching helps and when it hides deploy issues"]
+      },
+      {
+        "name": "Cost Optimization",
+        "whatItMeans": ["Measure and attribute cost", "Use right resource types", "Optimize over time", "Avoid over-provisioning"],
+        "howIApplyIt": ["Free Tier and lab sizing", "Understand EC2 and data transfer basics", "Self-host where it makes sense; use managed tunnel (e.g. Cloudflare) to reduce exposure and cost"]
+      },
+      {
+        "name": "Sustainability",
+        "whatItMeans": [
+          "Minimize environmental impact by using efficient architectures and scaling to demand"
+        ],
+        "howIApplyIt": [
+          "Right size resources, use autoscaling where possible, shut down non prod workloads, prefer managed services when they reduce waste"
+        ]
+      }
+    ]
+  },
+  "kubernetes": {
+    "status": {
+      "section0": "completed",
+      "section1": "completed",
+      "section2": "in_progress",
+      "current": "Pod to Node placement"
+    },
+    "keyLearnings": [
+      "Cluster foundations and workload reconciliation",
+      "Services, DNS, and Ingress behavior",
+      "Debugging Ingress and default-namespace conflicts (e.g. leftover nginx demo serving instead of app)",
+      "Cleanup discipline: delete demo resources and verify with kubectl get -A and curl"
+    ],
+    "nextUp": [
+      "Scheduler and multi-node behavior",
+      "Config and Secrets",
+      "Networking deep dive",
+      "Health, scaling, Helm, observability"
+    ]
+  },
+  "selfHostingAndDevOps": {
+    "stack": ["Docker", "Cloudflare Tunnel (cloudflared)", "Linux server", "Tailscale", "GitHub Actions"],
+    "whatILearned": [
+      "Docker lifecycle: build, stop, remove, run to replace a container cleanly",
+      "Cloudflare edge caching: origin can be updated while the edge serves stale content; purge or cache headers matter",
+      "GitHub Actions SSH deploy: verify HOST secret, connectivity, and firewall (e.g. UFW); Tailscale avoids port 22 and ISP blocks",
+      "cloudflared running does not prove the app behind it is the right version; verify with docker ps, logs, and curl"
+    ],
+    "lessonsLearned": [
+      "Site showed old version after deploy: root cause was Cloudflare cache, not Docker. Fix: purge cache or restart cloudflared; verify with curl -I.",
+      "Prefer Tailscale-based SSH for deploys when ISP blocks port 22 or GitHub Actions times out.",
+      "Standardize container names and use a repeatable deploy script (build, stop, rm, run) so you never leave an old container on the port.",
+      "Always verify with curl after deploy; document what \"good\" looks like (headers, status, content)."
+    ]
+  },
+  "proof": [
+    {
+      "title": "Cloudflare cache and latest content",
+      "result": "Purged Cloudflare cache and confirmed the latest content was served at the edge.",
+      "howToVerify": ["See Errors Wiki: Site showed old version after Docker update", "Post-deploy verification: curl -I and hard refresh showed new content"]
+    },
+    {
+      "title": "Ingress serving correct app",
+      "result": "Fixed Ingress serving nginx welcome page by deleting leftover nginx demo resources and verifying curl output.",
+      "howToVerify": ["See Errors Wiki: Ingress kept serving nginx welcome page", "kubectl get -A to find conflicts; delete demo; curl host returned app"]
+    },
+    {
+      "title": "Clean container replacement",
+      "result": "Used docker build, stop, rm, run to replace a container cleanly and avoid stale content from an old process.",
+      "howToVerify": ["See Errors Wiki and Projects: Self Hosted Portfolio", "Workflow: build → stop → rm → run; verify with docker ps and curl"]
+    },
+    {
+      "title": "Tunnel and site reachability",
+      "result": "Verified cloudflared service running and site reachable end-to-end.",
+      "howToVerify": ["systemctl status cloudflared", "docker ps for app container", "curl -I to public domain"]
+    }
+  ]
+}

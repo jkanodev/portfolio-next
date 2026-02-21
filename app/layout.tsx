@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: defaultOg.title,
     description: defaultOg.description,
-    type: defaultOg.type,
+    type: "website",
   },
 };
 

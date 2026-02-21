@@ -23,7 +23,8 @@ export function createFuseIndex<T extends SearchableItem>(
   });
 }
 
-export function searchErrors<T>(fuse: Fuse<T>, query: string): Fuse.FuseResult<T>[] {
+export function searchErrors<T>(fuse: Fuse<T>, query: string): import("fuse.js").FuseResult<T>[] {
   if (!query.trim()) return [];
   return fuse.search(query.trim());
 }
+export const buildErrorsFuse = createFuseIndex;
