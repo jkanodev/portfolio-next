@@ -1,1 +1,8 @@
 node_modules
+.next
+node_modules
+.env
+.env.local
+Dockerfile.local
+dist
+build
