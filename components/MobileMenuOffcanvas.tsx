@@ -11,9 +11,10 @@ export default function MobileMenuOffcanvas({ items }: { items: Item[] }) {
       tabIndex={-1}
       id="mobileNav"
       aria-labelledby="mobileNavLabel"
+      style={{ backgroundColor: "var(--bg)" }}
     >
       <div className="offcanvas-header">
-        <h5 className="offcanvas-title text-[var(--text)]" id="mobileNavLabel">
+        <h5 className="offcanvas-title" id="mobileNavLabel">
           Menu
         </h5>
         <button
@@ -21,9 +22,10 @@ export default function MobileMenuOffcanvas({ items }: { items: Item[] }) {
           className="btn-close"
           data-bs-dismiss="offcanvas"
           aria-label="Close menu"
+          style={{ minWidth: 44, minHeight: 44 }}
         />
       </div>
-      <div className="offcanvas-body p-0">
+      <div className="offcanvas-body">
         <nav aria-label="Main navigation">
           {items.map((item) => (
             <Link

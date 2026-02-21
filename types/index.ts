@@ -7,6 +7,18 @@ export type Project = {
   workflow_commands?: string[];
   linked_errors?: string[];
   prevention_checklist?: string[];
+  /** Extended fields for featured projects (e.g. Landing Zone) */
+  subtitle?: string;
+  tags?: string[];
+  href?: string;
+  status?: string;
+  highlights?: string[];
+  proof?: string[];
+  repoLink?: string;
+  note?: string;
+  goal?: string;
+  exercises?: string[];
+  cloudMapping?: { aws: string; azure: string }[];
 };
 
 export type LearningProfile = {

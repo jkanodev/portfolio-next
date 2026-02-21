@@ -15,10 +15,31 @@ export default function HomePage() {
             {data.profile.name}
           </h1>
           <p className="mt-3 text-lg text-[var(--text-muted)] sm:text-xl">
-            Targeting {data.profile.roleTargets.join(", ")} roles. Building and running
-            infrastructure with Docker, Kubernetes, and cloud—hands-on learning, documented
-            fixes, and production-minded habits.
+            Targeting {data.profile.roleTargets.join(", ")} roles. Hands-on learning, documented
+            fixes, production-minded habits.
           </p>
+          <ul className="mt-4 space-y-2 text-sm text-[var(--text-muted)]" aria-label="Experience highlights">
+            <li className="flex gap-2">
+              <span className="text-[var(--accent)]" aria-hidden>•</span>
+              Self-hosted portfolio with Docker on home server; GitHub Actions remote deploys.
+            </li>
+            <li className="flex gap-2">
+              <span className="text-[var(--accent)]" aria-hidden>•</span>
+              Cloudflare caching incident: site showed old version after deploy—fixed with purge / cloudflared restart.
+            </li>
+            <li className="flex gap-2">
+              <span className="text-[var(--accent)]" aria-hidden>•</span>
+              Tailscale-based SSH deploy to avoid ISP port 22 blocks and GitHub Actions timeouts.
+            </li>
+            <li className="flex gap-2">
+              <span className="text-[var(--accent)]" aria-hidden>•</span>
+              Kubernetes: sections 0 & 1 complete; section 2 in progress (Pod to Node placement).
+            </li>
+            <li className="flex gap-2">
+              <span className="text-[var(--accent)]" aria-hidden>•</span>
+              AWS hands-on: Free Tier, CLI, IAM, VPC basics, S3, CloudWatch, Well-Architected pillars.
+            </li>
+          </ul>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/projects"
@@ -43,17 +64,49 @@ export default function HomePage() {
         </div>
       </Section>
 
+      <Section>
+        <div className="mx-auto max-content px-4 sm:px-6">
+          <h2 className="text-xl font-semibold text-[var(--text)]">Featured Project</h2>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">
+            Cloud foundation and governance in progress.
+          </p>
+          <Link
+            href="/projects#landing-zone"
+            className="mt-4 flex min-h-[44px] flex-col rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5 text-left text-[var(--text)] transition-colors hover:border-[var(--text-muted)]/30 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <span className="font-medium">Cloud Foundation Landing Zone</span>
+              <p className="mt-1 text-sm text-[var(--text-muted)]">
+                Mini enterprise cloud foundation: identity, networking, logging, guardrails. AWS and Azure mapping.
+              </p>
+            </div>
+            <ArrowRight className="mt-2 h-4 w-4 shrink-0 text-[var(--accent)] sm:mt-0 sm:ml-4" aria-hidden />
+          </Link>
+        </div>
+      </Section>
+
       <Section id="projects">
         <div className="mx-auto max-content px-4 sm:px-6">
           <h2 className="text-xl font-semibold text-[var(--text)]">Projects</h2>
           <p className="mt-1 text-sm text-[var(--text-muted)]">
-            Self-hosted portfolio, Kubernetes labs, and deploy pipelines.
+            Self-hosted portfolio, Landing Zone, Kubernetes labs, deploy pipelines.
           </p>
           <ul className="mt-6 space-y-3">
             <li>
               <Link
+                href="/projects#landing-zone"
+                className="block min-h-[44px] rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 text-[var(--text)] transition-colors hover:border-[var(--text-muted)]/30"
+              >
+                <span className="font-medium">Cloud Foundation Landing Zone</span>
+                <p className="mt-1 text-sm text-[var(--text-muted)]">
+                  Identity, networking, logging, guardrails. In progress.
+                </p>
+              </Link>
+            </li>
+            <li>
+              <Link
                 href="/projects#self-hosted-portfolio"
-                className="block rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 text-[var(--text)] hover:border-[var(--text-muted)]/30 transition-colors"
+                className="block min-h-[44px] rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 text-[var(--text)] transition-colors hover:border-[var(--text-muted)]/30"
               >
                 <span className="font-medium">Self-Hosted Portfolio</span>
                 <p className="mt-1 text-sm text-[var(--text-muted)]">
@@ -64,7 +117,7 @@ export default function HomePage() {
             <li>
               <Link
                 href="/projects#kubernetes-labs"
-                className="block rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 text-[var(--text)] hover:border-[var(--text-muted)]/30 transition-colors"
+                className="block min-h-[44px] rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 text-[var(--text)] transition-colors hover:border-[var(--text-muted)]/30"
               >
                 <span className="font-medium">Kubernetes Lab & Troubleshooting</span>
                 <p className="mt-1 text-sm text-[var(--text-muted)]">
@@ -75,7 +128,7 @@ export default function HomePage() {
             <li>
               <Link
                 href="/projects#aws-ec2-deploy"
-                className="block rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 text-[var(--text)] hover:border-[var(--text-muted)]/30 transition-colors"
+                className="block min-h-[44px] rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 text-[var(--text)] transition-colors hover:border-[var(--text-muted)]/30"
               >
                 <span className="font-medium">AWS EC2 Deploy Pipeline</span>
                 <p className="mt-1 text-sm text-[var(--text-muted)]">

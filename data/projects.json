@@ -1,5 +1,51 @@
 [
   {
+    "id": "landing-zone",
+    "title": "Cloud Foundation Landing Zone",
+    "subtitle": "Mini enterprise cloud foundation built as a personal project",
+    "tags": ["AWS", "Azure mapping", "IAM or RBAC", "Networking", "Logging", "Governance"],
+    "stack": ["AWS", "Azure mapping", "IAM or RBAC", "Networking", "Logging", "Governance"],
+    "one_liner": "Mini enterprise cloud foundation built as a personal project",
+    "href": "/projects#landing-zone",
+    "status": "In progress",
+    "highlights": [
+      "Identity boundary with least privilege roles",
+      "Hub and spoke or transit style networking with controlled traffic",
+      "Centralized logging and queries",
+      "Dev vs prod separation and blast radius thinking",
+      "Guardrails with policy enforcement"
+    ],
+    "proof": [
+      "Diagram + written architecture explanation",
+      "Screenshots of policies denying unsafe config",
+      "Logs showing centralized visibility"
+    ],
+    "repoLink": "https://github.com/jkanodev",
+    "note": "Hands on labs and build project, not job experience",
+    "goal": "Build a minimal enterprise-style cloud foundation: identity boundaries, network segmentation, centralized logging, and policy guardrails—mapping AWS and Azure concepts.",
+    "architecture": [
+      "Identity boundary with separate accounts/subscriptions and least-privilege roles",
+      "Hub-and-spoke or transit-style network with controlled egress and segmentation",
+      "Centralized logging (e.g. CloudWatch / Log Analytics) with queries and retention",
+      "Dev vs prod separation to limit blast radius",
+      "Policy guardrails (e.g. AWS Config / Azure Policy) to deny unsafe config"
+    ],
+    "exercises": [
+      "Define identity boundary and role model (IAM / RBAC)",
+      "Design hub-spoke or transit network and document traffic rules",
+      "Enable centralized logging and run sample queries",
+      "Enforce at least one policy that denies an unsafe action and capture evidence",
+      "Document architecture and Azure vs AWS concept mapping"
+    ],
+    "cloudMapping": [
+      { "aws": "IAM / Organizations", "azure": "Azure AD / RBAC / Management Groups" },
+      { "aws": "VPC, subnets, security groups", "azure": "VNet, subnets, NSGs" },
+      { "aws": "CloudWatch Logs / Metrics", "azure": "Log Analytics / Monitor" },
+      { "aws": "AWS Config / Guardrails", "azure": "Azure Policy" },
+      { "aws": "Accounts (OU hierarchy)", "azure": "Subscriptions (MG hierarchy)" }
+    ]
+  },
+  {
     "id": "self-hosted-portfolio",
     "title": "Self Hosted Portfolio Platform",
     "stack": ["Docker", "Linux", "Cloudflare Tunnel", "systemd", "GitHub"],

@@ -40,34 +40,77 @@ body {
   scroll-margin-top: 4rem;
 }
 
-/* Bootstrap Offcanvas: match site theme, ensure backdrop never mixes with content */
+/* Bootstrap Offcanvas: solid, readable, phone-friendly. No transparency. */
 .offcanvas {
   background-color: var(--bg) !important;
   color: var(--text);
   border-left: 1px solid var(--border);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.4);
+  -webkit-overflow-scrolling: touch;
+}
+/* Force opaque panel in dark mode (fallback if CSS var fails on some phones) */
+:root .offcanvas,
+html:not(.light) .offcanvas {
+  background-color: #0b0f14 !important;
+}
+html.light .offcanvas {
+  background-color: #f8fafc !important;
 }
 .offcanvas-header {
   border-bottom: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+  min-height: 56px;
+  align-items: center;
+}
+.offcanvas-title {
+  color: var(--text) !important;
+  font-size: 1.125rem;
+  font-weight: 600;
 }
 .offcanvas-header .btn-close {
   filter: invert(1);
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.75rem;
+  opacity: 0.8;
 }
 html.light .offcanvas-header .btn-close {
   filter: none;
+  opacity: 0.7;
+}
+.offcanvas-body {
+  padding: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .offcanvas-body .nav-link-mobile {
-  min-height: 44px;
+  min-height: 48px;
   display: flex;
   align-items: center;
   color: var(--text);
   text-decoration: none;
   border-bottom: 1px solid var(--border);
-  padding: 0.75rem 1rem;
+  padding: 0.875rem 1.25rem;
+  font-size: 1rem;
+  -webkit-tap-highlight-color: transparent;
 }
-.offcanvas-body .nav-link-mobile:hover {
+.offcanvas-body .nav-link-mobile:hover,
+.offcanvas-body .nav-link-mobile:active {
   background-color: var(--surface);
   color: var(--text);
 }
+/* Backdrop: fully opaque so page content never shows through */
 .offcanvas-backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.85) !important;
+  opacity: 1 !important;
+}
+.offcanvas.show {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+@media (max-width: 767.98px) {
+  .offcanvas.offcanvas-end {
+    max-width: 100%;
+    width: min(320px, 85vw);
+  }
 }

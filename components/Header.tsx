@@ -10,6 +10,7 @@ import MobileMenuOffcanvas from "./MobileMenuOffcanvas";
 const navItems = [
   { label: "Home", href: "/" },
   { label: "Projects", href: "/projects" },
+  { label: "Landing Zone", href: "/projects#landing-zone" },
   { label: "What I've Learned", href: "/#what-ive-learned" },
   { label: "Proof", href: "/#proof" },
   { label: "Knowledge Base", href: "/knowledge" },
@@ -54,13 +55,13 @@ export default function Header() {
             </button>
             <button
               type="button"
-              className="rounded-lg border border-[var(--border)] p-2 text-[var(--text)] md:hidden"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-[var(--border)] p-2 text-[var(--text)] md:hidden"
               data-bs-toggle="offcanvas"
               data-bs-target="#mobileNav"
               aria-controls="mobileNav"
               aria-label="Open menu"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-6 w-6" aria-hidden />
             </button>
           </div>
         </div>
