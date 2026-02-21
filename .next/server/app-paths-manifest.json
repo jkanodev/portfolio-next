@@ -1,0 +1,11 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/page": "app/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/about/page": "app/about/page.js",
+  "/projects/page": "app/projects/page.js",
+  "/knowledge/kubernetes/page": "app/knowledge/kubernetes/page.js",
+  "/knowledge/errors/page": "app/knowledge/errors/page.js",
+  "/knowledge/page": "app/knowledge/page.js",
+  "/knowledge/commands/page": "app/knowledge/commands/page.js"
+}

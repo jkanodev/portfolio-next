@@ -1,10 +1,11 @@
 "use client";
 
-import "bootstrap";
+import { useEffect } from "react";
 import Link from "next/link";
 import { Moon, Sun, Menu } from "lucide-react";
 import { useTheme } from "next-themes";
 import MobileMenuOffcanvas from "./MobileMenuOffcanvas";
+
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -18,6 +19,11 @@ const navItems = [
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
+
+  // Load Bootstrap JS only on client so prerender never sees document/window
+  useEffect(() => {
+    import("bootstrap");
+  }, []);
 
   return (
     <>

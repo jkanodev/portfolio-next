@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    container_name: portfolio
+    restart: unless-stopped
+    expose:
+      - "3000"
+    # No port published to host; nginx proxies
+
+  nginx:
+    image: nginx:alpine
+    container_name: portfolio-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
