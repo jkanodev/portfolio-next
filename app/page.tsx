@@ -3,6 +3,7 @@ import Section from "@/components/Section";
 import { ArrowRight, BookOpen, CheckCircle2, Container, Cloud, Terminal } from "lucide-react";
 import type { LearningData } from "@/types";
 import learningData from "@/content/learning.json";
+import RecallTrainerTablet from "@/components/RecallTrainerTablet";
 
 const data = learningData as LearningData;
 
@@ -194,6 +195,25 @@ export default function HomePage() {
               </ul>
             </article>
           </div>
+        </div>
+      </Section>
+
+      <Section id="recall-trainer" className="bg-[var(--bg-elevated)]/50">
+        <div className="mx-auto max-content px-4 sm:px-6">
+          <h2 className="text-xl font-semibold text-[var(--text)]">Recall Trainer</h2>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">
+            Try it in the tablet below or open full screen.
+          </p>
+          <RecallTrainerTablet />
+          <Link
+            href="/recall-trainer"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex min-h-[44px] items-center gap-2 text-sm font-medium text-[var(--accent)] hover:underline"
+          >
+            Open Recall Trainer in new tab
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </Section>
 

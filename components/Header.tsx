@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Moon, Sun, Menu } from "lucide-react";
 import { useTheme } from "next-themes";
-import MobileMenuOffcanvas from "./MobileMenuOffcanvas";
-
+import MobileMenu from "./MobileMenuOffcanvas";
 
 const navItems = [
   { label: "Home", href: "/" },
   { label: "Projects", href: "/projects" },
   { label: "Landing Zone", href: "/projects#landing-zone" },
+  { label: "Recall Trainer", href: "/recall-trainer" },
   { label: "What I've Learned", href: "/#what-ive-learned" },
   { label: "Proof", href: "/#proof" },
   { label: "Knowledge Base", href: "/knowledge" },
@@ -20,11 +20,7 @@ const navItems = [
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
-
-  // Load Bootstrap JS only on client so prerender never sees document/window
-  useEffect(() => {
-    import("bootstrap");
-  }, []);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <>
@@ -56,8 +52,7 @@ export default function Header() {
             <button
               type="button"
               className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-[var(--border)] p-2 text-[var(--text)] md:hidden"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#mobileNav"
+              onClick={() => setMobileMenuOpen(true)}
               aria-controls="mobileNav"
               aria-label="Open menu"
             >
@@ -66,7 +61,7 @@ export default function Header() {
           </div>
         </div>
       </header>
-      <MobileMenuOffcanvas items={navItems} />
+      <MobileMenu open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} items={navItems} />
     </>
   );
 }
