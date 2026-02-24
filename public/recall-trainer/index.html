@@ -1,19 +1,331 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Recall Trainer</title>
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: system-ui, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #1a1a2e; color: #eee; }
-    .placeholder { text-align: center; padding: 2rem; }
-  </style>
+<meta charset="UTF-8">
+<title>Recall Trainer</title>
+
+<style>
+body{font-family:Arial;background:#0f172a;color:#e5e7eb;padding:30px;max-width:1000px;margin:auto;}
+.card{background:#0b1226;border:1px solid #1f2a44;border-radius:10px;padding:18px;margin-bottom:20px;}
+.flash{background:#3b0a0a !important;}
+.good{color:#22c55e;}
+.bad{color:#ef4444;}
+.tagbox{display:flex;flex-wrap:wrap;gap:6px;padding:10px;border:1px solid #1f2a44;border-radius:8px;background:#020617;}
+.tag{background:#1e293b;border:1px solid #334155;border-radius:6px;padding:4px 8px;font-size:14px;}
+.linebreak{flex-basis:100%;height:0;}
+textarea{width:100%;min-height:80px;border-radius:8px;border:none;padding:12px;font-size:14px;margin-top:10px;}
+button{margin-top:10px;margin-right:8px;padding:8px 14px;border:none;border-radius:6px;background:#1e293b;color:#e5e7eb;cursor:pointer;}
+.metrics{margin-top:8px;color:#94a3b8;}
+.summaryBox{margin-top:20px;padding:15px;background:#0f1a33;border:1px solid #2b3b66;border-radius:8px;}
+select{margin-top:10px;padding:6px;background:#1e293b;color:white;border:none;border-radius:6px;}
+summary{cursor:pointer;font-weight:bold;}
+.small{color:#94a3b8;font-size:14px;line-height:1.45;}
+</style>
 </head>
+
 <body>
-  <div class="placeholder">
-    <h1>Recall Trainer</h1>
-    <p>Replace this file with your full trainer HTML.</p>
+
+<!-- RULES CARD -->
+<div class="card">
+  <h3 style="margin:0 0 10px 0;">DevOps Learning Order</h3>
+  <div class="small">
+    Every topic must be learned in this order:<br>
+    1. What it is<br>
+    2. Why it exists<br>
+    3. How it works<br>
+    4. Where it runs<br>
+    5. One real example
   </div>
+</div>
+
+<!-- COLLAPSIBLE LOADER -->
+<details class="card">
+<summary>Load Question Set (JSON)</summary>
+
+<textarea id="jsonInput" placeholder='Paste JSON here... Tip: write answers using the 5 step order: What it is, Why it exists, How it works, Where it runs, One real example'></textarea>
+
+<button onclick="saveSet()">Save Set</button>
+
+<select id="setSelect" onchange="loadSet()">
+<option value="">-- Load Saved Set --</option>
+</select>
+
+</details>
+
+<!-- TRAINER -->
+<div id="card" class="card">
+
+<div id="trainer">
+
+<div id="questionCounter" style="color:#94a3b8;margin-bottom:6px;"></div>
+<h2 id="questionText"></h2>
+
+<div id="target" style="filter:blur(6px);cursor:pointer;margin-bottom:10px;"></div>
+<div id="tagbox" class="tagbox"></div>
+
+<textarea id="input"
+ autocapitalize="off"
+ spellcheck="false"
+ placeholder="Tap once, then type next word..."></textarea>
+
+<div>
+  <button id="prevBtn">Previous</button>
+  <button id="nextBtn">Next</button>
+  <button id="resetBtn">Reset</button>
+</div>
+
+<div id="status"></div>
+<div id="metrics" class="metrics"></div>
+
+</div>
+
+<div id="summary" style="display:none;"></div>
+
+</div>
+
+<script>
+
+// ================= IndexedDB =================
+let db;
+const request = indexedDB.open("RecallTrainerDB", 1);
+
+request.onupgradeneeded = e => {
+  db = e.target.result;
+  db.createObjectStore("sets", { keyPath: "name" });
+};
+
+request.onsuccess = e => {
+  db = e.target.result;
+  refreshDropdown();
+};
+
+function saveSet(){
+  const raw = document.getElementById("jsonInput").value;
+  try{
+    const parsed = JSON.parse(raw);
+    const tx = db.transaction("sets","readwrite");
+    tx.objectStore("sets").put(parsed);
+    tx.oncomplete = refreshDropdown;
+  }catch(err){
+    alert("Invalid JSON");
+  }
+}
+
+function refreshDropdown(){
+  const tx = db.transaction("sets","readonly");
+  const store = tx.objectStore("sets");
+  const req = store.getAll();
+  req.onsuccess = () => {
+    const select = document.getElementById("setSelect");
+    select.innerHTML = `<option value="">-- Load Saved Set --</option>`;
+    req.result.forEach(set=>{
+      const opt = document.createElement("option");
+      opt.value = set.name;
+      opt.textContent = set.name;
+      select.appendChild(opt);
+    });
+  };
+}
+
+function loadSet(){
+  const name = document.getElementById("setSelect").value;
+  if(!name) return;
+  const tx = db.transaction("sets","readonly");
+  const store = tx.objectStore("sets");
+  const req = store.get(name);
+  req.onsuccess = () => {
+    hydrateQuestions(req.result.questions);
+  };
+}
+
+// ================= Trainer =================
+
+let questions = [];
+let current = 0;
+let audioCtx=null;
+
+function unlockAudio(){
+ if(audioCtx) return;
+ audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+}
+document.addEventListener("touchstart",unlockAudio,{once:true});
+document.addEventListener("click",unlockAudio,{once:true});
+
+function playError(){
+ if(!audioCtx) return;
+ const o=audioCtx.createOscillator();
+ const g=audioCtx.createGain();
+ o.type="square"; o.frequency.value=180; g.gain.value=0.4;
+ o.connect(g); g.connect(audioCtx.destination);
+ o.start(); setTimeout(()=>o.stop(),120);
+}
+
+function hydrateQuestions(qArr){
+ questions = qArr.map(q=>{
+   const words=q.a.split(" ");
+   return {
+     q:q.q,
+     a:q.a,
+     words,
+     match:words.map(w=>w.toLowerCase().replace(/[^\w]/g,"")),
+     index:0,
+     errors:0,
+     done:false
+   };
+ });
+ current=0;
+ document.getElementById("summary").style.display="none";
+ document.getElementById("trainer").style.display="block";
+ loadQ();
+}
+
+const questionText=document.getElementById("questionText");
+const target=document.getElementById("target");
+const tagbox=document.getElementById("tagbox");
+const input=document.getElementById("input");
+const status=document.getElementById("status");
+const metrics=document.getElementById("metrics");
+const summary=document.getElementById("summary");
+const trainer=document.getElementById("trainer");
+const card=document.getElementById("card");
+const questionCounter=document.getElementById("questionCounter");
+
+// ---------- FIXED LOADQ ----------
+function loadQ(){
+
+ if(!questions.length){
+   questionCounter.textContent = "No question set loaded";
+   questionText.textContent = "";
+   target.textContent = "";
+   tagbox.innerHTML = "";
+   input.value = "";
+   input.disabled = true;
+   status.textContent = "";
+   metrics.textContent = "";
+   return;
+ }
+
+ const q = questions[current];
+
+ // FORCE repaint-safe update
+ questionCounter.textContent = "";
+ questionCounter.textContent =
+   "Question " + (current + 1) + " of " + questions.length;
+
+ questionText.textContent = "";
+ questionText.textContent = q.q;
+
+ target.textContent = q.a;
+ tagbox.innerHTML = "";
+ input.value = "";
+ input.disabled = q.done;
+
+ update();
+
+ // Force mobile repaint
+ document.body.offsetHeight;
+}
+
+target.onclick=()=>target.style.filter=
+ target.style.filter==="blur(6px)"?"none":"blur(6px)";
+
+function addTag(t){
+ const d=document.createElement("div");
+ d.className="tag"; d.textContent=t;
+ tagbox.appendChild(d);
+}
+function addBreak(){
+ const b=document.createElement("div");
+ b.className="linebreak"; tagbox.appendChild(b);
+}
+function flash(){
+ card.classList.add("flash");
+ setTimeout(()=>card.classList.remove("flash"),150);
+}
+function update(){
+ const q=questions[current];
+ const total=q.index+q.errors;
+ const acc=total?Math.round((q.index/total)*100):100;
+ metrics.textContent=`Errors: ${q.errors} | Accuracy: ${acc}%`;
+ status.textContent=q.done?"Completed ✔":`Correct ${q.index}/${q.words.length}`;
+ status.className=q.done?"good":"";
+}
+
+input.addEventListener("keydown",e=>{
+ if(!questions.length) return;
+ const q=questions[current];
+ if(q.done) return;
+
+ if(e.key==="Backspace"&&input.selectionStart===0){
+  e.preventDefault(); return;
+ }
+
+ const boundary=(e.key===" "||e.key==="."||e.key==="Enter");
+ if(!boundary) return;
+ if(e.key==="Enter") e.preventDefault();
+
+ const typed=input.value.trim().toLowerCase().replace(/[^\w]/g,"");
+ if(!typed) return;
+
+ const expected=q.match[q.index];
+
+ if(typed!==expected){
+  q.errors++; playError(); flash();
+  input.value=""; update(); return;
+ }
+
+ const display=q.words[q.index];
+ addTag(display);
+ if(display.endsWith(".")) addBreak();
+
+ q.index++; input.value="";
+ if(q.index===q.words.length){
+   q.done=true;
+   input.disabled=true;
+   if(questions.every(q=>q.done)) showSummary();
+ }
+
+ update();
+});
+
+document.getElementById("nextBtn").onclick=()=>{
+ if(current<questions.length-1){ current++; loadQ(); }
+};
+document.getElementById("prevBtn").onclick=()=>{
+ if(current>0){ current--; loadQ(); }
+};
+document.getElementById("resetBtn").onclick=()=>{
+ questions.forEach(q=>{q.index=0;q.errors=0;q.done=false;});
+ current=0;
+ summary.style.display="none";
+ trainer.style.display="block";
+ loadQ();
+};
+
+function showSummary(){
+ trainer.style.display="none";
+ summary.style.display="block";
+
+ let html="<h2>Session Summary</h2>";
+
+ questions.forEach((q,i)=>{
+   const total=q.index+q.errors;
+   const acc=total?Math.round((q.index/total)*100):100;
+   html+=`
+     <div class="summaryBox">
+       <strong>Q${i+1}:</strong> ${q.q}<br><br>
+       <strong>Answer:</strong> ${q.a}<br><br>
+       Errors: ${q.errors}<br>
+       Accuracy: ${acc}%
+     </div>
+   `;
+ });
+
+ html+=`<br><button onclick="location.reload()">Restart All</button>`;
+ summary.innerHTML=html;
+}
+
+</script>
+
 </body>
 </html>
